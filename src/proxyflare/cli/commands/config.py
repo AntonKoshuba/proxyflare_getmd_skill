@@ -50,7 +50,7 @@ def verify() -> None:
             sync_client = Client(api_token=ctx.config.api_token.get_secret_value())
 
             try:
-                token_id = verify_token(sync_client.accounts.tokens, ctx.config.account_id)
+                token_id = verify_token(sync_client.user.tokens)
                 console.print(f"[green]VALID[/green] (id: {token_id})")
                 token_valid = True
             except Exception as e:
@@ -60,9 +60,7 @@ def verify() -> None:
             # 2. Check Permissions (Sync via validation.py)
             if token_valid and token_id:
                 try:
-                    check_token_permissions(
-                        sync_client.accounts.tokens, token_id, ctx.config.account_id
-                    )
+                    check_token_permissions(sync_client.user.tokens, token_id)
                     console.print("Token has all required permissions.", style="green")
                 except ValueError as e:
                     console.print(f"[yellow]WARN: {e}[/yellow]")
@@ -71,7 +69,13 @@ def verify() -> None:
                     for perm in WORKER_PERMISSIONS:
                         console.print(f"  [dim]  - {perm}[/dim]")
                 except Exception as e:
-                    console.print(f"[yellow]WARN: Check failed: {e}[/yellow]")
+                    if "403" in str(e) or "9109" in str(e):
+                        console.print(
+                            "[yellow]WARN: Could not fetch permissions[/yellow] "
+                            "[dim](requires 'User -> API Tokens -> Read')[/dim]"
+                        )
+                    else:
+                        console.print(f"[yellow]WARN: Check failed: {e}[/yellow]")
 
             # 3. Functional Check (Async via WorkerService)
             console.print("Checking Workers Subdomain...", end=" ")

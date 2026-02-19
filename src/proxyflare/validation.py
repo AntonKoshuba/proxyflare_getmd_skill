@@ -1,22 +1,23 @@
 """Validation utilities for Cloudflare API tokens and permissions."""
 
-from cloudflare.resources.accounts import TokensResource
-from cloudflare.types.accounts import TokenVerifyResponse
+from typing import Any
+
+from cloudflare.resources.user.tokens import TokensResource
 from cloudflare.types.shared import Token
 
 __all__ = ["WORKER_PERMISSIONS", "check_token_permissions", "verify_token"]
 
 WORKER_PERMISSIONS: tuple[str, ...] = (
     "Workers Routes Write",
-    "Account API Tokens Read",
+    "API Tokens Read",
     "Workers Scripts Write",
     "Account Settings Read",
 )
 
 
-def verify_token(token_resource: TokensResource, account_id: str) -> str:
+def verify_token(token_resource: TokensResource) -> str:
     """Verify that the Cloudflare API token is active."""
-    verify_response: TokenVerifyResponse | None = token_resource.verify(account_id=account_id)
+    verify_response: Any = token_resource.verify()
     if verify_response is None:
         raise ValueError("Token verification failed.")
     token_id = verify_response.id
@@ -25,9 +26,9 @@ def verify_token(token_resource: TokensResource, account_id: str) -> str:
     return token_id
 
 
-def check_token_permissions(token_resource: TokensResource, token_id: str, account_id: str) -> None:
+def check_token_permissions(token_resource: TokensResource, token_id: str) -> None:
     """Check that the token has all required permissions."""
-    token_response: Token | None = token_resource.get(token_id=token_id, account_id=account_id)
+    token_response: Token | None = token_resource.get(token_id=token_id)
     if token_response is None or token_response.policies is None:
         raise ValueError("Token policies not found.")
     current_permissions: set[str] = set()

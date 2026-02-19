@@ -122,6 +122,24 @@ proxyflare/
 - **Rust (cargo)** (for compiling WASM artifacts, the `worker-build` plugin gets installed automatically)
 - **Node.js (npm/npx)** (for running local tests via `wrangler dev`)
 
+### Cloudflare API Token Setup
+
+To use **Proxyflare**, you need to provide a custom Cloudflare API token. Create a custom token in your Cloudflare dashboard (`My Profile -> API Tokens -> Create Token -> Custom Token`) with the following **four** specific permissions:
+
+1. **User** -> **API Tokens** -> **Read**
+2. **Account** -> **Workers Scripts** -> **Edit**
+3. **Account** -> **Account Settings** -> **Read**
+4. **Zone** -> **Workers Routes** -> **Edit**
+
+> [!WARNING]
+> Do not restrict the token to specific zones in "Zone Resources" or "Account Resources". Set them to **Include -> All accounts** and **Include -> All zones**, otherwise the `verify` endpoint will return an `1000 Invalid API Token` error.
+
+Set the token and your Account ID as environment variables (e.g., in a `.env` file):
+```bash
+PROXYFLARE_API_TOKEN="your_custom_token"
+PROXYFLARE_ACCOUNT_ID="your_account_id"
+```
+
 ### Installation and Build for Development
 
 The project uses a custom `hatchling` build hook, which automatically compiles Rust workers upon package installation. It is recommended to use `uv` for fast dependency management and utility building:
