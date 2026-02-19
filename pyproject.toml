@@ -1,0 +1,115 @@
+[project]
+name = "proxyflare"
+version = "0.1.0"
+description = "Cloudflare Workers Proxy Management CLI"
+readme = "README.md"
+requires-python = ">=3.12"
+authors = [
+    { name = "fer" }
+]
+dependencies = [
+    "httpx>=0.27.0",
+    "typer>=0.12.0",
+    "rich>=13.7.0",
+    "pydantic>=2.6.0",
+    "pydantic-settings>=2.2.0",
+    "tenacity>=8.2.0",
+    "loguru>=0.7.0",
+    "cloudflare>=4.3.1",
+]
+
+[project.optional-dependencies]
+dev = [
+    # Testing
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+    "pytest-cov>=4.1.0",
+    "pytest-xdist>=3.5.0",
+    "respx>=0.21.0",
+
+    # Code Quality
+    "ruff>=0.3.0",
+
+    # Pre-commit
+    "pre-commit>=3.6.0",
+
+    # Security
+    "bandit>=1.7.0",
+    "safety>=3.0.0",
+]
+
+[project.scripts]
+proxyflare = "proxyflare.cli.app:main"
+pf = "proxyflare.cli.app:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/proxyflare"]
+
+[tool.hatch.build.hooks.custom]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = [
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # pyflakes
+    "I",    # isort
+    "B",    # flake8-bugbear
+    "C4",   # flake8-comprehensions
+    "UP",   # pyupgrade
+    "ANN",  # flake8-annotations
+    "S",    # flake8-bandit (security)
+    "T20",  # flake8-print
+]
+ignore = [
+    "ANN101",  # Missing type annotation for self
+    "ANN102",  # Missing type annotation for cls
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = [
+    "S101",  # Use of assert
+    "ANN",   # Type annotations not required in tests
+    "S603",  # Subprocess untrusted input in tests
+    "S607",  # Partial executable path in tests
+]
+"src/proxyflare/workers/**/*.py" = ["ANN401"]
+"src/proxyflare/workers/**/*.pyi" = ["ANN401"]
+"src/proxyflare/utils/artifacts.py" = ["S603"]
+"src/proxyflare/scripts/**/*.py" = ["T20", "S603", "S607", "ANN201"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests/unit", "tests/workers"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "-ra",
+    "--strict-markers",
+    "--strict-config",
+    "--cov=proxyflare",
+]
+markers = [
+    "integration: marks tests as integration tests (deselect with '-m \"not integration\"')",
+]
+
+[tool.coverage.run]
+source = ["src"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = false
+fail_under = 70
+
+[tool.bandit]
+exclude_dirs = ["tests", ".venv"]
+skips = ["B101"]  # Assert used in tests
