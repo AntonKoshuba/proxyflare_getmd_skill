@@ -55,6 +55,7 @@ Stress testing results (200 requests with `concurrency: 20` via Cloudflare) for 
 
 *ℹ️ Benchmark was conducted from a local machine*  
 *ℹ️ Results may vary depending on your region and network load*  
+TODO: benchmark locally via `wrangler dev` 
 *ℹ️ Rust workers show the best performance and lowest latency thanks to WebAssembly, making them ideal for high-load scraping/proxy tasks.*  
 
 ---
