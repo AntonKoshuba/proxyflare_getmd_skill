@@ -9,6 +9,8 @@
   <b>English</b> | <a href="README.ru.md">Русский</a>
 </div>
 
+---
+
 > CLI utility for managing proxy servers based on Cloudflare Workers
 
 ## 📋 Description
@@ -27,7 +29,8 @@
 
 ## ⚖️ Comparison with Original flareprox
 
-The **Proxyflare** project is inspired by the [flareprox](https://github.com/MrTurvey/flareprox) utility, but offers several significant architectural improvements:
+> [!NOTE]
+> The **Proxyflare** project is inspired by the [flareprox](https://github.com/MrTurvey/flareprox) utility, but offers several significant architectural improvements:
 
 | Feature               | flareprox (Original)                  | Proxyflare                                                                                                |
 | :-------------------- | :------------------------------------ | :-------------------------------------------------------------------------------------------------------- |
