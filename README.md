@@ -13,7 +13,7 @@ getmd <URL>
 
 Пример:
 ```bash
-getmd https://yandex.ru/company/news/10-02-2026-01
+getmd https://
 ```
 
 ## Особенности
