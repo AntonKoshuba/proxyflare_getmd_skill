@@ -27,7 +27,7 @@ uv sync
 
 2. Конфигурация
 
-Для работы скрипта необходим файл `proxyflare-workers.json` в корневой директории. Если у вас уже развернуты воркеры через Proxyflare, просто скопируйте конфиг:
+Для работы скрипта необходим файл `proxyflare-workers.json` в корневой директории. Если у вас уже развернуты воркеры через [Proxyflare](https://github.com/defernest/proxyflare), просто скопируйте конфиг:
 
 ```bash
 cp ~/путь/к/вашему/proxyflare-workers.json .
